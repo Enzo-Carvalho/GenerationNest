@@ -14,14 +14,23 @@ export class TarefaService{
     }
 
     async findAll(): Promise<Tarefa[]>{
-        return this.tarefaRepository.find()
+        return this.tarefaRepository.find({
+            relations:{
+                categoria: true
+            }
+        })
+
     }
 
     async findById(id: number): Promise<Tarefa>{
         let tarefaProcurada = await this.tarefaRepository.findOne({
             where: {
                 id
+            },
+            relations: {
+                categoria: true
             }
+
         })
         if(!tarefaProcurada){
             throw new HttpException('Nenhuma tarefa foi encontrada com esse id', HttpStatus.NOT_FOUND)
@@ -33,6 +42,9 @@ export class TarefaService{
         return this.tarefaRepository.find({
             where: {
                 nome: ILike(`%${nome}%`)
+            },
+            relations:{
+                categoria: true
             }
         })
     }
